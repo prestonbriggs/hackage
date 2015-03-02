@@ -1,29 +1,29 @@
 indent selection
-x/^/ a/	/
-x/^	/ d
+	x/^/ a/	/
+	x/^	/ d
 
 search
-/pattern/
--/pattern/
+	/pattern
+	-/pattern
+	
+remember :/[pattern and :=/pattern
 
 C identifiers
-,y'/\*(\n|\*[^/]|[^\*])*\*/' y'//.*$' y/'(\\.|.)'/ y/"(\\.|.)*"/ x/[a-zA-Z_][a-zA-Z0-9_]*/ g/pattern/ v/./ p
+	,y'/\*(\n|\*[^/]|[^\*])*\*/' y'//.*$' y/'(\\.|.)'/ y/"(\\.|.)*"/ x/[a-zA-Z_][a-zA-Z0-9_]*/ g/pattern/ v/./ p
 
 Haskell constants and variables
-,y/--.*$/ y/'(\\.|.)'/ y/"(\\.|\\[ 	\n]*\\|.)*"/ x/[A-Z][a-zA-Z0-9_']*/  g/pattern/ v/./ p
-,y/--.*$/ y/'(\\.|.)'/ y/"(\\.|\\[ 	\n]*\\|.)*"/ x/[a-z_][a-zA-Z0-9_']*/ g/pattern/ v/./ p
+	,y/--.*$/ y/'(\\.|.)'/ y/"(\\.|\\[ 	\n]*\\|.)*"/ x/[A-Z][a-zA-Z0-9_']*/  g/pattern/ v/./ p
+	,y/--.*$/ y/'(\\.|.)'/ y/"(\\.|\\[ 	\n]*\\|.)*"/ x/[a-z_][a-zA-Z0-9_']*/ g/pattern/ v/./ p
 
 Edit address x/regexp/ command
 
-An address might be empty, implying the current selection (the dot),
+An address might be empty, implying the current selection,
 or a range, like
-
 	0,$	abbreviated	,	the entire file
 	0,.	abbreviated	,.	from the beginning to the dot
 	.,$	abbreviated	.,	from the dot to the end of file
 
 Useful commands include
-
 	d		for delete
 	p 		for print
 	a/text/	for append
@@ -32,18 +32,17 @@ Useful commands include
 	=		prints location
 
 The syntax for a regular expression e0 is
+	e3 : literal | charclass | '.' | '^' | '$' | '(' e0 ')'
 
-     e3:  literal | charclass | '.' | '^' | '$' | '(' e0 ')'
+	e2 : e3
+       | e2 rep
 
-     e2:  e3
-       |  e2 REP
+	rep : '*' | '+' | '?'
 
-     REP: '*' | '+' | '?'
-
-     e1:  e2
+	e1 :  e2
        |  e1 e2
 
-     e0:  e1
+	e0 :  e1
        |  e0 '|' e1
 
 A literal is any non-metacharacter,
