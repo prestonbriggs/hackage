@@ -1,0 +1,59 @@
+indent selection
+x/^/ a/	/
+x/^	/ d
+
+search
+/pattern/
+-/pattern/
+
+C identifiers
+,y'/\*(\n|\*[^/]|[^\*])*\*/' y'//.*$' y/'(\\.|.)'/ y/"(\\.|.)*"/ x/[a-zA-Z_][a-zA-Z0-9_]*/ g/pattern/ v/./ p
+
+Haskell constants and variables
+,y/--.*$/ y/'(\\.|.)'/ y/"(\\.|\\[ 	\n]*\\|.)*"/ x/[A-Z][a-zA-Z0-9_']*/  g/pattern/ v/./ p
+,y/--.*$/ y/'(\\.|.)'/ y/"(\\.|\\[ 	\n]*\\|.)*"/ x/[a-z_][a-zA-Z0-9_']*/ g/pattern/ v/./ p
+
+Edit address x/regexp/ command
+
+An address might be empty, implying the current selection (the dot),
+or a range, like
+
+	0,$	abbreviated	,	the entire file
+	0,.	abbreviated	,.	from the beginning to the dot
+	.,$	abbreviated	.,	from the dot to the end of file
+
+Useful commands include
+
+	d		for delete
+	p 		for print
+	a/text/	for append
+	c/text/	for change
+	i/text/	for insert
+	=		prints location
+
+The syntax for a regular expression e0 is
+
+     e3:  literal | charclass | '.' | '^' | '$' | '(' e0 ')'
+
+     e2:  e3
+       |  e2 REP
+
+     REP: '*' | '+' | '?'
+
+     e1:  e2
+       |  e1 e2
+
+     e0:  e1
+       |  e0 '|' e1
+
+A literal is any non-metacharacter,
+or a metacharacter (one of .*+?[]()|\^$), or the delimiter preceded by `\'.
+
+A charclass is a nonempty string s bracketed [s] (or [^s]); 
+it matches any character in (or not in) s.
+A negated character class never matches newline.
+A substring a-b, with a and b in ascending order,
+stands for the inclusive range of characters between a and b.
+In s, the metacharacters `-', `]', an initial `^',
+and the regular expression delimiter must be preceded by a `\';
+other metacharacters have no special meaning and may appear unescaped.
